@@ -1,4 +1,5 @@
-# MiniRT_RoadMap
+# MiniRT_RoadMap (WIP)
+*Read this in other languages: [English](README.en.md)**(WIP)**, [Français](README.md)**(WIP)**.*
 ### GENERATE RAYS
 ### INTERSECT SPHERE
 ### INTERSECT PLANE
