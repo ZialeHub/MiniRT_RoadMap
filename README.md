@@ -62,7 +62,7 @@ Le point d'intersection est donc défini comme suit:
 intersection->origin = ray->origin + (t * ray->dir);
 ```
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/IntersectSphere.jpg)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/IntersectSphere.png)
 - Calculer la normal
 &emsp;Le calcul de la normal d'une sphere correspond au vecteur normalizé allant du centre de la sphere vers le point d'intersection.
 ```
