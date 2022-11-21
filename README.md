@@ -41,7 +41,39 @@ camera->dir.y = sin(theta) * camera->dir.x + cos(theta) * camera->dir.y;
 
 ### INTERSECTION SPHERE
 - Resoudre l'équation du second degré
+&emsp;L'intersection avec la sphere est la plus classique pour un petit ray tracer, il faut résoudre l'équation du second degré.
+```
+a = ft_dot(ray->dir, ray->dir);
+b = 2.0 * (ft_dot(ray->dir, (ray->origin - sphere->center));
+c = ft_dot((ray->origin - sphere->center), (ray->origin - sphere->center)) - (sphere->radius * sphere->radius);
+
+delta = b * b - 4.0 * a * c;
+```
+Si le delta est inferieur à 0 alors il n'y a pas d'intersection, sinon la distance (aussi appelé temps "t") est donné par le minimum positif entre:
+```
+t1 = (-b - sqrt(delta)) / (2.0 * a);
+t2 = (-b + sqrt(delta)) / (2.0 * a);
+```
+Dans le cas où l'on veut récupérer l'object le plus proche touché par le rayon on peut stocker un "t" dans le ray. 
+Si le min(t1, t2) est inférieur à 0 alors l'intersection est derriere la camera.
+Sinon on compare min(t1, t2) avec ray->t pour le mettre à jour si le résultat est inferieur.
+Le point d'intersection est donc défini comme suit:
+```
+intersection->origin = ray->origin + (t * ray->dir);
+```
+
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/IntersectSphere.jpg)
 - Calculer la normal
+&emsp;Le calcul de la normal d'une sphere correspond au vecteur normalizé allant du centre de la sphere vers le point d'intersection.
+```
+intersection.dir = intersection.origin - sphere->center;
+```
+Pour une bonne gestion des intersections dans le cas où la camera est à l'interieur de l'objet, il faut vérifier que l'angle entre la normal au point d'intersection et la direction du rayon soit strictement superieur à 0.
+Si c'est le cas alors, la camera est à l'interieur de l'objet et il faut donc inverser la normal.
+```
+if (ft_dot(ray->dir, intersection->dir) > 0.0)
+  intersection.dir = -intersection.dir;
+```
 ### INTERSECTION PLAN
 - Vérifier l'intersection
 - Calculer la normal
