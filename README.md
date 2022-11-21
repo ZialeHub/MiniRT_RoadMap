@@ -37,6 +37,8 @@ camera->dir.x = cos(theta) * camera->dir.x - sin(theta) * camera->dir.y;
 camera->dir.y = sin(theta) * camera->dir.x + cos(theta) * camera->dir.y;
 ```
 
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/RotateCamera.svg)
+
 ### INTERSECTION SPHERE
 - Resoudre l'équation du second degré
 - Calculer la normal
