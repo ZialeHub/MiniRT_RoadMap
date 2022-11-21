@@ -3,9 +3,39 @@
 ### GENERER LES RAYS
 - Génerer le ray en fonction de la camera
   Premierement, le ray tracing, comme son nom l'indique consiste à tracer des rays d'une camera dans une direction données. Dans miniRT, votre camera est désignée par un point ( x, y, z ), un vecteur normalizé ( Vx, Vy, Vz ) et un FOV ( 0-180 ). Nous devons donc tracer des rays partant de son point, dans la direction du vecteur, tout en limitant le FOV.
- ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/Camera.jpg)
+
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/Camera.jpg)
+ Le FOV correspond à l'angle horizontal de la vision de la camera, mais nous devons prendre en compte la taille de votre fenêtre pour connaitre le nombre de pixel.
+```
+t_ray *ray;
+double  tmp;
+
+ray = ft_init_ray();
+ray->tmax = INFINITY;
+ray->tmin = 0.0;
+ray->point = camera->point;
+ray->dir.x = pixel_x + 0.5 - WIN_WIDTH * 0.5;
+ray->dir.y = pixel_y + 0.5 - WIN_HEIGHT * 0.5;
+tmp = 2.0 * tan((camera->fov * M_PI * 0.5) / 180.0);
+if (WIN_WIDTH < WIN_HEIGHT)
+  ray->dir.z = WIN_HEIGHT / tmp;
+else
+  ray->dir.z = WIN_HEIGHT / tmp;
+ft_normalize(ray->dir);
+```
 - Pivoter le ray en fonction du pixel visé
-- Limiter les rays en fonction du FOV
+```
+double  phi;
+double  theta;
+
+phi = atan(camera->dir.y, camera->dir.x);
+theta = acos(camera->dir.z);
+camera->dir.x = cos(theta) * camera->dir.x + sin(theta) * camera->dir.z;
+camera->dir.z = cos(theta) * camera->dir.z - sin(theta) * camera->dir.x;
+camera->dir.x = cos(theta) * camera->dir.x - sin(theta) * camera->dir.y;
+camera->dir.y = sin(theta) * camera->dir.x + cos(theta) * camera->dir.y;
+```
+
 ### INTERSECTION SPHERE
 - Resoudre l'équation du second degré
 - Calculer la normal
