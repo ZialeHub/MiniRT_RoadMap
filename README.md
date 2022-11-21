@@ -2,10 +2,11 @@
 *Read this in other languages: [English](README.en.md)**(WIP)**, [Français](README.md)**(WIP)**.*
 ### GENERER LES RAYS
 - Génerer le ray en fonction de la camera
-  Premierement, le ray tracing, comme son nom l'indique consiste à tracer des rays d'une camera dans une direction données. Dans miniRT, votre camera est désignée par un point ( x, y, z ), un vecteur normalizé ( Vx, Vy, Vz ) et un FOV ( 0-180 ). Nous devons donc tracer des rays partant de son point, dans la direction du vecteur, tout en limitant le FOV.
+
+&emsp;Premierement, le ray tracing, comme son nom l'indique consiste à tracer des rays d'une camera dans une direction données. Dans miniRT, votre camera est désignée par un point ( x, y, z ), un vecteur normalizé ( Vx, Vy, Vz ) et un FOV ( 0-180 ). Nous devons donc tracer des rays partant de son point, dans la direction du vecteur, tout en limitant le FOV.
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/Camera.jpg)
- Le FOV correspond à l'angle horizontal de la vision de la camera, mais nous devons prendre en compte la taille de votre fenêtre pour connaitre le nombre de pixel.
+&emsp;Le FOV correspond à l'angle horizontal de la vision de la camera, mais nous devons prendre en compte la taille de votre fenêtre pour connaitre le nombre de pixel.
 ```
 t_ray *ray;
 double  tmp;
