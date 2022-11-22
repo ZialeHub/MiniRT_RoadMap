@@ -76,7 +76,21 @@ if (ft_dot(ray->dir, intersection->dir) > 0.0)
 ```
 ### INTERSECTION PLAN
 - Vérifier l'intersection
+&emsp;L'intersection du plan est probablement la plus simple. Nous allons utiliser le fait que le dot product de deux vecteurs perpendiculaires est égal à 0. ( Un point sur le plan a donc un vecteur du point du plan vers ses coordonnées qui correspond à un vecteur perpendiculaire à la normal du plan. )
+```
+double  denom;
+double  t;
+
+denom = ft_dot(plane->normal, ray->dir);
+if (denom == 0)
+  return (NULL);
+t = ft_dot((plane->point - ray->origin), plane->normal) / denom;
+```
+
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/IntersectPlane.png)
 - Calculer la normal
+&emsp;La normal d'une intersection sur un plan correspond à la normal du plan. Aucun calcul necessaire :D
+
 ### INTERSECTION CYLINDER
 - Résoudre l'équation du second degré (t1, t2)
 - Calculer les caps de bout de cylindre (t3, t4)
