@@ -106,7 +106,7 @@ Pour tout les calculs de lumiere, il est recommandé de mettre toutes les couleu
 &emsp;La lumiere ambiente est une lumiere hypothétique, elle est présente partout et à tout moment du rendu. Un object ne peut donc jamais être totalement dans le noir.
 Pour calculer la lumiere ambiente dans miniRT, on utilise les propriétés données dans la scene.
 ```
-t_color color;
+t_color *color;
 
 color = ft_clamp(ambient->color) * ambient->ratio;
 ```
@@ -115,11 +115,35 @@ color = ft_clamp(ambient->color) * ambient->ratio;
 - A quoi correspond la lumiere diffuse
 &emsp;La lumiere diffuse est la lumiere d'un spot sur un objet, elle permet d'amplifier le rendu 3d d'un objet grace à de legeres ombres en fonction de l'angle des rayons de lumiere. On va donc calculer l'angle créer entre le rayon allant de l'intersection vers la lumiere et la normal de l'intersection.
 ```
+double  diffuse_ratio;
+t_color *color;
+t_vec *light_dir;
 
+light_dir = light->point - intersection.point;
+diffuse_ratio = ft_dot(intersection.dir, light_dir);
+diffuse_ratio = max(diffuse_ratio, 0.0);
+diffuse_ratio = diffuse_ratio * light->ratio;
+color = ft_new_color(1, 1, 1) * diffuse_ratio;
 ```
+
+&emsp;La couleur finale correspond à la somme de la lumiere ambient et de la lumiere diffuse, multiplié par la couleur de l'objet.
+Evidemment, si vous avez ramené les couleurs sur un ratio entre 0 et 1, alors il vous faut multiplier le résultat par 255.0 .
 ### OMBRES (HARD)
-- Creation des rayons de lumière
+&emsp;Dans le ray tracing il y a plusieurs types d'ombres, les ombres "hard" qui sont les ombres créées par la presence d'un objet entre la lumiere et le point d'intersection actuel. Et les ombres "soft", qui sont les ombres plus legeres pour rendre plus réalistes les ombres "hard" ( la penombre autour des ombres ).
+Nous allons ici nous limiter aux ombres "hard" car nos point de lumieres sont par defaut limiter à un point fix.
+
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/softhardShadow.jpg)
 - Calcul des ombres
+```
+t_ray *shadow_ray;
+
+shadow_ray->origin = intersection->point;
+shadow_ray->dir = light->point - intersection->point;
+```
+Il vous faut donc trouver l'intersection avec se ray, si il y a intersection alors l'objet est dans l'ombre et on va donc supprimer la lumiere diffuse du calcul de la couleur finale.
+
+Pour aller plus loin, je laisse les personnes interessées faire leur recherches personnels :D
+
 ### REDIMENSIONNER / PIVOTER / TRANSLATER
 - Redimensionner (sphere: diametre / cylindre: Diametre, longueur)
 - Pivoter (camera, plan, cylindre)
