@@ -98,12 +98,25 @@ t = ft_dot((plane->point - ray->origin), plane->normal) / denom;
 - Calculer la normal
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/DiffuseCylinder.png)
+
+Pour tout les calculs de lumiere, il est recommandé de mettre toutes les couleurs ( RGB ) sur des ratios entre 0 et 1. Cela simplifie beaucoup les calculs et évite de saturer les couleurs.
+
 ### LUMIERE AMBIENTE
 - A quoi correspond la lumiere ambiente
-- Simple calcul
+&emsp;La lumiere ambiente est une lumiere hypothétique, elle est présente partout et à tout moment du rendu. Un object ne peut donc jamais être totalement dans le noir.
+Pour calculer la lumiere ambiente dans miniRT, on utilise les propriétés données dans la scene.
+```
+t_color color;
+
+color = ft_clamp(ambient->color) * ambient->ratio;
+```
+
 ### LUMIERE DIFFUSE
 - A quoi correspond la lumiere diffuse
-- Calcule de la lumiere diffuse
+&emsp;La lumiere diffuse est la lumiere d'un spot sur un objet, elle permet d'amplifier le rendu 3d d'un objet grace à de legeres ombres en fonction de l'angle des rayons de lumiere. On va donc calculer l'angle créer entre le rayon allant de l'intersection vers la lumiere et la normal de l'intersection.
+```
+
+```
 ### OMBRES (HARD)
 - Creation des rayons de lumière
 - Calcul des ombres
