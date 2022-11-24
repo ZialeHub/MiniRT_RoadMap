@@ -149,7 +149,7 @@ Pour aller plus loin, je laisse les personnes interessées faire leur recherches
 - Pivoter (camera, plan, cylindre)
 - Translater (camera, light, sphere, plan, cylindre)
 
-&emsp;La lumiere Pour les modifications des données des objets, nous avons utiliser des hooks de la mlx par simplicité, d'autres méthodes peuvent être utilisées comme une interface graphique ou un menu interactif fait avec la minilibx.
+&emsp;Pour les modifications des données des objets, nous avons utiliser des hooks de la mlx par simplicité, d'autres méthodes peuvent être utilisées comme une interface graphique ou un menu interactif fait avec la minilibx.
 Par defaut, nous avons utilisé des valeurs de ± 1 pour les redimensionnement et les translations, mais des rotations de ±0.1 sur chaque axes.
 Bien sur les valeurs peuvent être changées comme bon vous semble tant que le rendu reste correct et utilisable par l'utilisateur.
 
