@@ -117,7 +117,7 @@ color = ft_clamp(ambient->color) * ambient->ratio;
 ```
 double  diffuse_ratio;
 t_color *color;
-t_vec *light_dir;
+t_vec3 *light_dir;
 
 light_dir = light->point - intersection.point;
 diffuse_ratio = ft_dot(intersection.dir, light_dir);
@@ -149,11 +149,36 @@ Pour aller plus loin, je laisse les personnes interessées faire leur recherches
 - Pivoter (camera, plan, cylindre)
 - Translater (camera, light, sphere, plan, cylindre)
 
+&emsp;La lumiere Pour les modifications des données des objets, nous avons utiliser des hooks de la mlx par simplicité, d'autres méthodes peuvent être utilisées comme une interface graphique ou un menu interactif fait avec la minilibx.
+Par defaut, nous avons utilisé des valeurs de ± 1 pour les redimensionnement et les translations, mais des rotations de ±0.1 sur chaque axes.
+Bien sur les valeurs peuvent être changées comme bon vous semble tant que le rendu reste correct et utilisable par l'utilisateur.
+
 
 # BONUS
 ### LUMIERE SPECULAIRE => PHONG REFLECTION MODEL
 - A quoi correspond la lumiere speculaire
+
+&emsp;La lumiere speculaire est la reflexion de la lumiere sur un objet, ce qui produit un effet "brillant" sans modifier totalement les spécificités des materiaux.
+
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/ReflectSpecular.png)
 - Calcul de la lumiere speculaire
+
+&emsp; Pour calculer la lumiere speculaire nous allons devoir calculer l'angle de reflexion de la lumiere pour savoir si la partie reflechie est transmise vers la camera.
+
+```
+t_vec3  reflect;
+
+reflect = ray.dir - (intersection.normal * (2.0 * ft_dot(light.dir, intersection.normal)));
+```
+
+Une fois le vecteur de reflexion calculé et normalizé, le ratio de cette lumiere correspond au dot entre le vecteur de reflexion et la direction du ray de la camera inversé, mis à la puissance de la force de reflexion choisi. ([1 - 1000] plus la force est haute et plus la reflexion sera précise et moins étalée.)
+On peut ensuite calculer la couleur donnée par cette partie de la lumiere:
+
+```
+t_color color;
+
+color = light->rgb * light->ratio * reflect_ratio * Ratio_Reflexion_matiere;
+```
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/EverythingPhongLight.png)
 
