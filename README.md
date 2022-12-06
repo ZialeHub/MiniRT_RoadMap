@@ -153,8 +153,8 @@ else
   intersection.normal = cylinder->normal;
 
 // ft_normal_body()
-// Il faut calculer la projection de l'intersection avec l'axe du cylindre et ensuite créer le vecteur entre
-// cette projection et le point d'intersection.
+// Il faut calculer la projection de l'intersection avec l'axe du cylindre et ensuite
+// créer le vecteur entre cette projection et le point d'intersection.
 ```
 
 
