@@ -92,10 +92,72 @@ t = ft_dot((plane->point - ray->origin), plane->normal) / denom;
 &emsp;La normal d'une intersection sur un plan correspond à la normal du plan. Aucun calcul necessaire :D
 
 ### INTERSECTION CYLINDER
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/IntersectCylinder.png)
+
+Pour les calculs du cylindre, il va falloir calculer un cylindre infini (un tube infini), puis "créer" deux plan au limites du cylindre voulu pour permettre de calculer les intersections avec les caps.
+
 - Résoudre l'équation du second degré (t1, t2)
+Pour obtenir t1 et t2, il faut calculer l'intersection du rayon avec le corps infini sur cylindre.
+Nous devons résoudre l'équation du second degré correspondant à l'intersection avec le corps du cylindre:
+```
+tmp1 = ft_cross(ray->dir, cylindre->normal);
+a = ft_dot(tmp1, tmp1);
+tmp_vect = ray->origin - cylindre->origin;
+tmp2 = ft_cross(tmp_vect, cylinder->normal);
+b = 2.0 * ft_dot(tmp1, tmp2);
+c = ft_dot(tmp2, tmp2) - (cylinder->diameter / 2.0) ^ 2.0;
+d = b ^ 2.0 - 4.0 * a * c;
+t1 = (-b - sqrt(d)) / (2.0 * a);
+t2 = (-b + sqrt(d)) / (2.0 * a);
+if (t1 > t2)
+  ft_swap(t1, t2);
+```
+
 - Calculer les caps de bout de cylindre (t3, t4)
+Les intersections t3 et t4 sont les intersections avec les plan pour limiter la taille du cylindre. On va centrer le point du cylindre pour que les plans soient à équidistance.
+```
+mid_vect = cylinder->normal * (cylinder->height / 2.0);
+mid_point = cylinder->origin + mid_vect;
+tmp1 = ft_dot(mid_point - ray->origin, cylinder->normal);
+tmp2 = ft_dot(ray->dir, cylinder->normal);
+t3 = (tmp1 + (cylinder->height / 2.0)) / tmp2;
+t4 = (tmp1 - (cylinder->height / 2.0)) / tmp2;
+if (t3 > t4)
+  ft_swap(t3, t4);
+```
+
 - Calculer l'intersection
+Une fois les quatre t calculés, il nous faut maintenant décider lequel est le plus proche de notre origin de rayon.
+Vous pouvez vous aider du schema ci-dessus pour comprendre comment choisir le t.
+```
+if (t3 > t2 || t4 < t1)
+  return ; // Pas d'intersection
+t_final = fmax(t1, t3);
+if (t_final < 0)
+  t_final = fmin(t2, t4);
+if (t_final <= 0 || t_final > ray->tmax)
+  return ; // Pas d'intersection
+```
+
 - Calculer la normal
+```
+if (t3 < t1)
+  ft_normal_body() // La normal est celle du corps du cylindre
+else
+  ft_normal_caps() // La normal est celle du cap touché
+
+// ft_normal_caps()
+if (ft_dot(ray->dir, cylinder->normal) > 0.0)
+  intersection.normal = -cylinder->normal;
+else
+  intersection.normal = cylinder->normal;
+
+// ft_normal_body()
+// Il faut calculer la projection de l'intersection avec l'axe du cylindre et ensuite créer le vecteur entre
+// cette projection et le point d'intersection.
+```
+
+
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/DiffuseCylinder.png)
 
