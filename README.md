@@ -5,7 +5,7 @@
 
 &emsp;Premierement, le ray tracing, comme son nom l'indique consiste à tracer des rays d'une camera dans une direction données. Dans miniRT, votre camera est désignée par un point ( x, y, z ), un vecteur normalizé ( Vx, Vy, Vz ) et un FOV ( 0-180 ). Nous devons donc tracer des rays partant de son point, dans la direction du vecteur, tout en limitant le FOV.
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/Camera.jpg)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/Camera.jpg)
 &emsp;Le FOV correspond à l'angle horizontal de la vision de la camera, mais nous devons prendre en compte la taille de votre fenêtre pour connaitre le nombre de pixel.
 ```
 t_ray *ray;
@@ -37,7 +37,7 @@ camera->dir.x = cos(theta) * camera->dir.x - sin(theta) * camera->dir.y;
 camera->dir.y = sin(theta) * camera->dir.x + cos(theta) * camera->dir.y;
 ```
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/RotateCamera.svg)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/RotateCamera.svg)
 
 ### INTERSECTION SPHERE
 - Resoudre l'équation du second degré
@@ -62,7 +62,7 @@ Le point d'intersection est donc défini comme suit:
 intersection->origin = ray->origin + (t * ray->dir);
 ```
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/IntersectSphere.png)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/IntersectSphere.png)
 - Calculer la normal
 &emsp;Le calcul de la normal d'une sphere correspond au vecteur normalizé allant du centre de la sphere vers le point d'intersection.
 ```
@@ -87,12 +87,12 @@ if (denom == 0)
 t = ft_dot((plane->point - ray->origin), plane->normal) / denom;
 ```
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/IntersectPlane.png)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/IntersectPlane.png)
 - Calculer la normal
 &emsp;La normal d'une intersection sur un plan correspond à la normal du plan. Aucun calcul necessaire :D
 
 ### INTERSECTION CYLINDER
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/IntersectCylinder.png)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/IntersectCylinder.png)
 
 Pour les calculs du cylindre, il va falloir calculer un cylindre infini (un tube infini), puis "créer" deux plan au limites du cylindre voulu pour permettre de calculer les intersections avec les caps.
 
@@ -159,7 +159,7 @@ else
 
 
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/DiffuseCylinder.png)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/DiffuseCylinder.png)
 
 Pour tout les calculs de lumiere, il est recommandé de mettre toutes les couleurs ( RGB ) sur des ratios entre 0 et 1. Cela simplifie beaucoup les calculs et évite de saturer les couleurs.
 
@@ -194,7 +194,7 @@ Evidemment, si vous avez ramené les couleurs sur un ratio entre 0 et 1, alors i
 &emsp;Dans le ray tracing il y a plusieurs types d'ombres, les ombres "hard" qui sont les ombres créées par la presence d'un objet entre la lumiere et le point d'intersection actuel. Et les ombres "soft", qui sont les ombres plus legeres pour rendre plus réalistes les ombres "hard" ( la penombre autour des ombres ).
 Nous allons ici nous limiter aux ombres "hard" car nos point de lumieres sont par defaut limiter à un point fix.
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/softhardShadow.jpg)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/softhardShadow.jpg)
 - Calcul des ombres
 ```
 t_ray *shadow_ray;
@@ -222,7 +222,7 @@ Bien sur les valeurs peuvent être changées comme bon vous semble tant que le r
 
 &emsp;La lumiere speculaire est la reflexion de la lumiere sur un objet, ce qui produit un effet "brillant" sans modifier totalement les spécificités des materiaux.
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/ReflectSpecular.png)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/ReflectSpecular.png)
 - Calcul de la lumiere speculaire
 
 &emsp; Pour calculer la lumiere speculaire nous allons devoir calculer l'angle de reflexion de la lumiere pour savoir si la partie reflechie est transmise vers la camera.
@@ -242,31 +242,31 @@ t_color color;
 color = light->rgb * light->ratio * reflect_ratio * Ratio_Reflexion_matiere;
 ```
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/EverythingPhongLight.png)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/EverythingPhongLight.png)
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/PhongShadow.png)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/PhongShadow.png)
 ### CHECKERBOARD
 - Checkerboard sphere
 - Checkerboard plan
 - Checkerboard cylindre
 - Checkerboard cone
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/Checkerboard.png)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/Checkerboard.png)
 ### MULTIPLE-SPOT DE LUMIERE + LUMIERE COLORE
 - Calculs d'addition des lumieres
 - Calculs des mélanges de couleurs
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/MultipleSpot.png)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/MultipleSpot.png)
 ### INTERSECTION CONE
 - Résoudre l'équation du second degré (t1, t2)
 - Calculs des caps de haut et bas (t3, t4)
 - Calcul de l'intersection
 - Calcul de la normal
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/DiffuseConePlane.png)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/DiffuseConePlane.png)
 ### BUMB MAP
 - A quoi correspond une normal map / Bump map
 - Initialisation d'une bump map
 - Exemple de calcul
 
-![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/BumpMap.png)
+![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/BumpMap.png)
