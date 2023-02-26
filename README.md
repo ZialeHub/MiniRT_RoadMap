@@ -1,12 +1,12 @@
 # MiniRT_RoadMap(WIP)
 *Read this in other languages: [English](README.en.md)**(WIP)**, [Français](README.md)**(WIP)**.*
 ### GENERER LES RAYS
-- Génerer le ray en fonction de la camera
+- Générer le ray en fonction de la camera
 
-&emsp;Premierement, le ray tracing, comme son nom l'indique consiste à tracer des rays d'une camera dans une direction données. Dans miniRT, votre camera est désignée par un point ( x, y, z ), un vecteur normalizé ( Vx, Vy, Vz ) et un FOV ( 0-180 ). Nous devons donc tracer des rays partant de son point, dans la direction du vecteur, tout en limitant le FOV.
+&emsp;Premièrement, le ray tracing, comme son nom l'indique consiste à tracer des rays d'une camera dans une direction donnée. Dans miniRT, votre camera est désignée par un point ( x, y, z ), un vecteur normalisé ( Vx, Vy, Vz ) et un FOV ( 0-180 ). Nous devons donc tracer des rays partant de son point, dans la direction du vecteur, tout en limitant le FOV.
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/Camera.jpg)
-&emsp;Le FOV correspond à l'angle horizontal de la vision de la camera, mais nous devons prendre en compte la taille de votre fenêtre pour connaitre le nombre de pixel.
+&emsp;Le FOV correspond à l'angle horizontal de la vision de la camera, mais nous devons prendre en compte la taille de votre fenêtre pour connaître le nombre de pixels.
 ```
 t_ray *ray;
 double  tmp;
@@ -40,8 +40,8 @@ camera->dir.y = sin(theta) * camera->dir.x + cos(theta) * camera->dir.y;
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/RotateCamera.svg)
 
 ### INTERSECTION SPHERE
-- Resoudre l'équation du second degré
-&emsp;L'intersection avec la sphere est la plus classique pour un petit ray tracer, il faut résoudre l'équation du second degré.
+- Résoudre l'équation du second degré
+&emsp;L'intersection avec la sphère est la plus classique pour un petit ray tracé, il faut résoudre l'équation du second degré.
 ```
 a = ft_dot(ray->dir, ray->dir);
 b = 2.0 * (ft_dot(ray->dir, (ray->origin - sphere->center));
@@ -49,27 +49,27 @@ c = ft_dot((ray->origin - sphere->center), (ray->origin - sphere->center)) - (sp
 
 delta = b * b - 4.0 * a * c;
 ```
-Si le delta est inferieur à 0 alors il n'y a pas d'intersection, sinon la distance (aussi appelé temps "t") est donné par le minimum positif entre:
+Si le delta est inférieur à 0 alors il n'y a pas d'intersection, sinon la distance (aussi appelé temps "t") est donné par le minimum positif entre :
 ```
 t1 = (-b - sqrt(delta)) / (2.0 * a);
 t2 = (-b + sqrt(delta)) / (2.0 * a);
 ```
-Dans le cas où l'on veut récupérer l'object le plus proche touché par le rayon on peut stocker un "t" dans le ray. 
-Si le min(t1, t2) est inférieur à 0 alors l'intersection est derriere la camera.
-Sinon on compare min(t1, t2) avec ray->t pour le mettre à jour si le résultat est inferieur.
-Le point d'intersection est donc défini comme suit:
+Dans le cas où l'on voudrait récupérer l'objet le plus proche touché par le rayon, on peut stocker un "t" dans le ray. 
+Si le min(t1, t2) est inférieur à 0 alors l'intersection est derrière la camera.
+Sinon on compare min(t1, t2) avec ray->t pour le mettre à jour si le résultat est inférieur.
+Le point d'intersection est donc défini comme suit :
 ```
 intersection->origin = ray->origin + (t * ray->dir);
 ```
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/IntersectSphere.png)
 - Calculer la normal
-&emsp;Le calcul de la normal d'une sphere correspond au vecteur normalizé allant du centre de la sphere vers le point d'intersection.
+&emsp;Le calcul de la normal d'une sphère correspond au vecteur normalisé allant du centre de la sphère vers le point d'intersection.
 ```
 intersection.dir = intersection.origin - sphere->center;
 ```
-Pour une bonne gestion des intersections dans le cas où la camera est à l'interieur de l'objet, il faut vérifier que l'angle entre la normal au point d'intersection et la direction du rayon soit strictement superieur à 0.
-Si c'est le cas alors, la camera est à l'interieur de l'objet et il faut donc inverser la normal.
+Pour une bonne gestion des intersections dans le cas où la camera est à l'intérieur de l'objet, il faut vérifier que l'angle entre la normal au point d'intersection et la direction du rayon soit strictement supérieur à 0.
+Si c'est le cas alors, la caméra est à l'intérieur de l'objet et il faut donc inverser la normal.
 ```
 if (ft_dot(ray->dir, intersection->dir) > 0.0)
   intersection.dir = -intersection.dir;
@@ -89,16 +89,16 @@ t = ft_dot((plane->point - ray->origin), plane->normal) / denom;
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/IntersectPlane.png)
 - Calculer la normal
-&emsp;La normal d'une intersection sur un plan correspond à la normal du plan. Aucun calcul necessaire :D
+&emsp;La normal d'une intersection sur un plan correspond à la normal du plan. Aucun calcul nécessaire :D
 
-### INTERSECTION CYLINDER
+### INTERSECTION CYLINDRE
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/IntersectCylinder.png)
 
-Pour les calculs du cylindre, il va falloir calculer un cylindre infini (un tube infini), puis "créer" deux plan au limites du cylindre voulu pour permettre de calculer les intersections avec les caps.
+Pour les calculs du cylindre, il va falloir calculer un cylindre infini (un tube infini), puis "créer" deux plans aux limites du cylindre voulu pour permettre de calculer les intersections avec les caps.
 
 - Résoudre l'équation du second degré (t1, t2)
-Pour obtenir t1 et t2, il faut calculer l'intersection du rayon avec le corps infini sur cylindre.
-Nous devons résoudre l'équation du second degré correspondant à l'intersection avec le corps du cylindre:
+Pour obtenir t1 et t2, il faut calculer l'intersection du rayon avec le corps infini sur le cylindre.
+Nous devons résoudre l'équation du second degré correspondant à l'intersection avec le corps du cylindre :
 ```
 tmp1 = ft_cross(ray->dir, cylindre->normal);
 a = ft_dot(tmp1, tmp1);
@@ -114,7 +114,7 @@ if (t1 > t2)
 ```
 
 - Calculer les caps de bout de cylindre (t3, t4)
-Les intersections t3 et t4 sont les intersections avec les plan pour limiter la taille du cylindre. On va centrer le point du cylindre pour que les plans soient à équidistance.
+Les intersections t3 et t4 sont les intersections avec les plans pour limiter la taille du cylindre. On va centrer le point du cylindre pour que les plans soient à équidistance.
 ```
 mid_vect = cylinder->normal * (cylinder->height / 2.0);
 mid_point = cylinder->origin + mid_vect;
@@ -127,8 +127,8 @@ if (t3 > t4)
 ```
 
 - Calculer l'intersection
-Une fois les quatre t calculés, il nous faut maintenant décider lequel est le plus proche de notre origin de rayon.
-Vous pouvez vous aider du schema ci-dessus pour comprendre comment choisir le t.
+Une fois les quatre t calculaient, il nous faut maintenant décider lequel est le plus proche de notre origine de rayon.
+Vous pouvez vous aider du schéma ci-dessus pour comprendre comment choisir le t.
 ```
 if (t3 > t2 || t4 < t1)
   return ; // Pas d'intersection
@@ -161,12 +161,12 @@ else
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/DiffuseCylinder.png)
 
-Pour tout les calculs de lumiere, il est recommandé de mettre toutes les couleurs ( RGB ) sur des ratios entre 0 et 1. Cela simplifie beaucoup les calculs et évite de saturer les couleurs.
+Pour tous les calculs de lumière, il est recommandé de mettre toutes les couleurs ( RGB ) sur des ratios entre 0 et 1. Cela simplifie beaucoup les calculs et évite de saturer les couleurs.
 
 ### LUMIERE AMBIENTE
-- A quoi correspond la lumiere ambiente
-&emsp;La lumiere ambiente est une lumiere hypothétique, elle est présente partout et à tout moment du rendu. Un object ne peut donc jamais être totalement dans le noir.
-Pour calculer la lumiere ambiente dans miniRT, on utilise les propriétés données dans la scene.
+- A quoi correspond la lumière ambiante
+&emsp;La lumière ambiante est une lumière hypothétique, elle est présente partout et à tout moment du rendu. Un objet ne peut donc jamais être totalement dans le noir.
+Pour calculer la lumière ambiante dans miniRT, on utilise les propriétés données dans la scène.
 ```
 t_color *color;
 
@@ -174,8 +174,8 @@ color = ft_clamp(ambient->color) * ambient->ratio;
 ```
 
 ### LUMIERE DIFFUSE
-- A quoi correspond la lumiere diffuse
-&emsp;La lumiere diffuse est la lumiere d'un spot sur un objet, elle permet d'amplifier le rendu 3d d'un objet grace à de legeres ombres en fonction de l'angle des rayons de lumiere. On va donc calculer l'angle créer entre le rayon allant de l'intersection vers la lumiere et la normal de l'intersection.
+- A quoi correspond la lumière diffuse
+&emsp;La lumière diffuse est la lumière d'un spot sur un objet, elle permet d'amplifier le rendu 3d d'un objet grâce à de légères ombres en fonction de l'angle des rayons de lumière. On va donc calculer l'angle créé entre le rayon allant de l'intersection vers la lumière et la normal de l'intersection.
 ```
 double  diffuse_ratio;
 t_color *color;
@@ -188,11 +188,11 @@ diffuse_ratio = diffuse_ratio * light->ratio;
 color = ft_new_color(1, 1, 1) * diffuse_ratio;
 ```
 
-&emsp;La couleur finale correspond à la somme de la lumiere ambient et de la lumiere diffuse, multiplié par la couleur de l'objet.
+&emsp;La couleur finale correspond à la somme de la lumière ambiante et de la lumière diffuse, multiplié par la couleur de l'objet.
 Evidemment, si vous avez ramené les couleurs sur un ratio entre 0 et 1, alors il vous faut multiplier le résultat par 255.0 .
 ### OMBRES (HARD)
-&emsp;Dans le ray tracing il y a plusieurs types d'ombres, les ombres "hard" qui sont les ombres créées par la presence d'un objet entre la lumiere et le point d'intersection actuel. Et les ombres "soft", qui sont les ombres plus legeres pour rendre plus réalistes les ombres "hard" ( la penombre autour des ombres ).
-Nous allons ici nous limiter aux ombres "hard" car nos point de lumieres sont par defaut limiter à un point fix.
+&emsp;Dans le ray tracing il y a plusieurs types d'ombres, les ombres "hard" qui sont les ombres créées par la présence d'un objet entre la lumière et le point d'intersection actuel. Et les ombres "soft", qui sont les ombres plus légères pour rendre plus réalistes les ombres "hard" ( la pénombre autour des ombres ).
+Nous allons ici nous limiter aux ombres "hard", car nos points de lumières sont par défaut limités à un point fixe.
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/softhardShadow.jpg)
 - Calcul des ombres
@@ -202,30 +202,30 @@ t_ray *shadow_ray;
 shadow_ray->origin = intersection->point;
 shadow_ray->dir = light->point - intersection->point;
 ```
-Il vous faut donc trouver l'intersection avec se ray, si il y a intersection alors l'objet est dans l'ombre et on va donc supprimer la lumiere diffuse du calcul de la couleur finale.
+Il vous faut donc trouver l'intersection avec ce ray, s'il y a une intersection alors l'objet est dans l'ombre et on va donc supprimer la lumière diffuse du calcul de la couleur finale.
 
-Pour aller plus loin, je laisse les personnes interessées faire leur recherches personnels :D
+Pour aller plus loin, je laisse les personnes intéressées faire leurs recherches personnels :D
 
 ### REDIMENSIONNER / PIVOTER / TRANSLATER
-- Redimensionner (sphere: diametre / cylindre: Diametre, longueur)
-- Pivoter (camera, plan, cylindre)
-- Translater (camera, light, sphere, plan, cylindre)
+- Redimensionner (sphère : diamètre / cylindre : Diamètre, longueur)
+- Pivoter (caméra, plan, cylindre)
+- Translater (caméra, light, sphère, plan, cylindre)
 
-&emsp;Pour les modifications des données des objets, nous avons utiliser des hooks de la mlx par simplicité, d'autres méthodes peuvent être utilisées comme une interface graphique ou un menu interactif fait avec la minilibx.
-Par defaut, nous avons utilisé des valeurs de ± 1 pour les redimensionnement et les translations, mais des rotations de ±0.1 sur chaque axes.
+&emsp;Pour les modifications des données des objets, nous avons utilisé des hooks de la mlx par simplicité, d'autres méthodes peuvent être utilisées comme une interface graphique ou un menu interactif fait avec la minilibx.
+Par défaut, nous avons utilisé des valeurs de ± 1 pour les redimensionnements et les translations, mais des rotations de ±0.1 sur chaque axe.
 Bien sur les valeurs peuvent être changées comme bon vous semble tant que le rendu reste correct et utilisable par l'utilisateur.
 
 
 # BONUS
 ### LUMIERE SPECULAIRE => PHONG REFLECTION MODEL
-- A quoi correspond la lumiere speculaire
+- A quoi correspond la lumière spéculaire
 
-&emsp;La lumiere speculaire est la reflexion de la lumiere sur un objet, ce qui produit un effet "brillant" sans modifier totalement les spécificités des materiaux.
+&emsp;La lumière spéculaire est la réflexion de la lumière sur un objet, ce qui produit un effet "brillant" sans modifier totalement les spécificités des matériaux.
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/ReflectSpecular.png)
-- Calcul de la lumiere speculaire
+- Calcul de la lumière spéculaire
 
-&emsp; Pour calculer la lumiere speculaire nous allons devoir calculer l'angle de reflexion de la lumiere pour savoir si la partie reflechie est transmise vers la camera.
+&emsp; Pour calculer la lumière spéculaire, nous allons devoir calculer l'angle de réflexion de la lumière pour savoir si la partie réflechie est transmise, vers la camera.
 
 ```
 t_vec3  reflect;
@@ -233,8 +233,8 @@ t_vec3  reflect;
 reflect = ray.dir - (intersection.normal * (2.0 * ft_dot(light.dir, intersection.normal)));
 ```
 
-Une fois le vecteur de reflexion calculé et normalizé, le ratio de cette lumiere correspond au dot entre le vecteur de reflexion et la direction du ray de la camera inversé, mis à la puissance de la force de reflexion choisi. ([1 - 1000] plus la force est haute et plus la reflexion sera précise et moins étalée.)
-On peut ensuite calculer la couleur donnée par cette partie de la lumiere:
+Une fois le vecteur de réflexion calculé et normalisé, le ratio de cette lumière correspond au dot entre le vecteur de réflexion et la direction du ray de la camera inversé, mis à la puissance de la force de réflexion choisie. ([1 - 1000] Plus la force est haute et plus la réflexion sera précise et moins étalée.)
+On peut ensuite calculer la couleur donnée par cette partie de la lumière:
 
 ```
 t_color color;
@@ -246,14 +246,14 @@ color = light->rgb * light->ratio * reflect_ratio * Ratio_Reflexion_matiere;
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/PhongShadow.png)
 ### CHECKERBOARD
-- Checkerboard sphere
+- Checkerboard sphère
 - Checkerboard plan
 - Checkerboard cylindre
 - Checkerboard cone
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/Checkerboard.png)
 ### MULTIPLE-SPOT DE LUMIERE + LUMIERE COLORE
-- Calculs d'addition des lumieres
+- Calculs d'addition des lumières
 - Calculs des mélanges de couleurs
 
 ![alt text](https://github.com/ZialeHub/MiniRT_RoadMap/blob/main/img/MultipleSpot.png)
